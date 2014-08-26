@@ -20,20 +20,45 @@
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
 
+//## weipu colors
+@wp-blue:               @brand-primary;
+@wp-blue0:              lighten(@wp-blue, 5.5%);
+@wp-blue1:              lighten(@wp-blue, 13.7%);
+@wp-blue2:              lighten(@wp-blue, 27.5%);
+@wp-blue3:              lighten(@wp-blue, 41.7%);
+
+@wp-tan:                @brand-warning;
+@wp-tan0:               lighten(@wp-tan, 5.5%);
+@wp-tan1:               lighten(@wp-tan, 13.7%);
+@wp-tan2:               lighten(@wp-tan, 27.5%);
+@wp-tan3:               lighten(@wp-tan, 41.7%);
+
+@wp-green:              @brand-success;
+@wp-green0:             lighten(@wp-green, 5.5%);
+@wp-green1:             lighten(@wp-green, 13.7%);
+@wp-green2:             lighten(@wp-green, 27.5%);
+@wp-green3:             lighten(@wp-green, 41.7%);
+
+@wp-red:                @brand-danger;
+@wp-red0:               lighten(@wp-red, 5.5%);
+@wp-red1:               lighten(@wp-red, 13.7%);
+@wp-red2:               lighten(@wp-red, 27.5%);
+@wp-red3:               lighten(@wp-red, 41.7%);
+
 
 //== Scaffolding
 //
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-@body-bg:               #fff;
+@body-bg:               @wp-tan2;
 //** Global text color on `<body>`.
 @text-color:            @gray-dark;
 
 //** Global textual link color.
-@link-color:            @brand-primary;
+@link-color:            @gray-dark;
 //** Link hover color set via `darken()` function.
-@link-hover-color:      darken(@link-color, 15%);
+@link-hover-color:      @wp-blue1;
 
 
 //== Typography
@@ -340,11 +365,11 @@
 @navbar-margin-bottom:             @line-height-computed;
 @navbar-border-radius:             @border-radius-base;
 @navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
-@navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
+@navbar-padding-vertical:          0;
 @navbar-collapse-max-height:       340px;
 
 @navbar-default-color:             #777;
-@navbar-default-bg:                #f8f8f8;
+@navbar-default-bg:                #303030;
 @navbar-default-border:            darken(@navbar-default-bg, 6.5%);
 
 // Navbar links
@@ -791,7 +816,9 @@
 @carousel-indicator-active-bg:                #fff;
 @carousel-indicator-border-color:             #fff;
 
-@carousel-caption-color:                      #fff;
+@carousel-caption-color:                      @gray-dark;
+@carousel-caption-h1-color:                   @gray-dark;
+@carousel-item-height:                        720px;
 
 
 //== Close

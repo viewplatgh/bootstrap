@@ -14,6 +14,7 @@
   width: 100%;
 
   > .item {
+    min-height: @carousel-item-height;
     display: none;
     position: relative;
     .transition(.6s ease-in-out left);
@@ -47,6 +48,12 @@
         transform: translate3d(0, 0, 0);
         left: 0;
       }
+    }
+  }
+
+  @media screen and (min-width: @screen-xs-min) {
+    > .item {
+      min-height: (@carousel-item-height - 270);
     }
   }
 
@@ -106,12 +113,12 @@
 
   // Set gradients for backgrounds
   &.left {
-    #gradient > .horizontal(@start-color: rgba(0,0,0,.5); @end-color: rgba(0,0,0,.0001));
+    #gradient > .horizontal(@start-color: rgba(0,0,0,.0001); @end-color: rgba(0,0,0,.0001));
   }
   &.right {
     left: auto;
     right: 0;
-    #gradient > .horizontal(@start-color: rgba(0,0,0,.0001); @end-color: rgba(0,0,0,.5));
+    #gradient > .horizontal(@start-color: rgba(0,0,0,.0001); @end-color: rgba(0,0,0,.0001));
   }
 
   // Hover/focus state
@@ -213,19 +220,26 @@
 // -----------------------------
 // Hidden by default for smaller viewports
 .carousel-caption {
-  position: absolute;
   left: 15%;
   right: 15%;
   bottom: 20px;
   z-index: 10;
-  padding-top: 20px;
+  padding-top: 30px;
   padding-bottom: 20px;
   color: @carousel-caption-color;
   text-align: center;
-  text-shadow: @carousel-text-shadow;
+  text-shadow: none;
   & .btn {
     text-shadow: none; // No shadow for button elements in carousel-caption
   }
+}
+
+.carousel-caption h1 {
+  color: @carousel-caption-h1-color;
+}
+
+.carousel-caption p {
+  font-size: (@carousel-control-font-size + 20);
 }
 
 
