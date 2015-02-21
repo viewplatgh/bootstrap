@@ -157,7 +157,7 @@ $(function () {
     strictEqual($('#qunit-fixture .open').length, 0, '"open" class removed')
   })
 
-  test('should fire show and hide event', function () {
+  test('should fire show and hide event', function (assert) {
     var dropdownHTML = '<ul class="tabs">'
         + '<li class="dropdown">'
         + '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
@@ -174,7 +174,7 @@ $(function () {
       .find('[data-toggle="dropdown"]')
       .bootstrapDropdown()
 
-    stop()
+    var done = assert.async()
 
     $dropdown
       .parent('.dropdown')
@@ -183,7 +183,7 @@ $(function () {
       })
       .on('hide.bs.dropdown', function () {
         ok(true, 'hide was fired')
-        start()
+        done()
       })
 
     $dropdown.click()
@@ -191,7 +191,7 @@ $(function () {
   })
 
 
-  test('should fire shown and hidden event', function () {
+  test('should fire shown and hidden event', function (assert) {
     var dropdownHTML = '<ul class="tabs">'
         + '<li class="dropdown">'
         + '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
@@ -208,7 +208,7 @@ $(function () {
       .find('[data-toggle="dropdown"]')
       .bootstrapDropdown()
 
-    stop()
+    var done = assert.async()
 
     $dropdown
       .parent('.dropdown')
@@ -217,11 +217,52 @@ $(function () {
       })
       .on('hidden.bs.dropdown', function () {
         ok(true, 'hidden was fired')
-        start()
+        done()
       })
 
     $dropdown.click()
     $(document.body).click()
+  })
+
+  test('should ignore keyboard events within <input>s and <textarea>s', function (assert) {
+    var done = assert.async()
+
+    var dropdownHTML = '<ul class="tabs">'
+        + '<li class="dropdown">'
+        + '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
+        + '<ul class="dropdown-menu" role="menu">'
+        + '<li><a href="#">Secondary link</a></li>'
+        + '<li><a href="#">Something else here</a></li>'
+        + '<li class="divider"/>'
+        + '<li><a href="#">Another link</a></li>'
+        + '<li><input type="text" id="input"></li>'
+        + '<li><textarea id="textarea"/></li>'
+        + '</ul>'
+        + '</li>'
+        + '</ul>'
+    var $dropdown = $(dropdownHTML)
+      .appendTo('#qunit-fixture')
+      .find('[data-toggle="dropdown"]')
+      .bootstrapDropdown()
+
+    var $input = $('#input')
+    var $textarea = $('#textarea')
+
+    $dropdown
+      .parent('.dropdown')
+      .on('shown.bs.dropdown', function () {
+        ok(true, 'shown was fired')
+
+        $input.focus().trigger($.Event('keydown', { which: 38 }))
+        ok($(document.activeElement).is($input), 'input still focused')
+
+        $textarea.focus().trigger($.Event('keydown', { which: 38 }))
+        ok($(document.activeElement).is($textarea), 'textarea still focused')
+
+        done()
+      })
+
+    $dropdown.click()
   })
 
 })
