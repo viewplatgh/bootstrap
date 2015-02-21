@@ -59,14 +59,14 @@ $(function () {
     equal($('#qunit-fixture').find('.active').attr('id'), 'home')
   })
 
-  test('should not fire shown when show is prevented', function () {
-    stop()
+  test('should not fire shown when show is prevented', function (assert) {
+    var done = assert.async()
 
     $('<div class="tab"/>')
       .on('show.bs.tab', function (e) {
         e.preventDefault()
         ok(true, 'show event fired')
-        start()
+        done()
       })
       .on('shown.bs.tab', function () {
         ok(false, 'shown event fired')
@@ -74,8 +74,8 @@ $(function () {
       .bootstrapTab('show')
   })
 
-  test('show and shown events should reference correct relatedTarget', function () {
-    stop()
+  test('show and shown events should reference correct relatedTarget', function (assert) {
+    var done = assert.async()
 
     var dropHTML = '<ul class="drop">'
         + '<li class="dropdown"><a data-toggle="dropdown" href="#">1</a>'
@@ -93,12 +93,113 @@ $(function () {
       .find('ul > li:last a')
         .on('show.bs.tab', function (e) {
           equal(e.relatedTarget.hash, '#1-1', 'references correct element as relatedTarget')
-          start()
         })
         .on('shown.bs.tab', function (e) {
           equal(e.relatedTarget.hash, '#1-1', 'references correct element as relatedTarget')
+          done()
         })
         .bootstrapTab('show')
+  })
+
+  test('should fire hide and hidden events', function (assert) {
+    var done = assert.async()
+
+    var tabsHTML = '<ul class="tabs">'
+        + '<li><a href="#home">Home</a></li>'
+        + '<li><a href="#profile">Profile</a></li>'
+        + '</ul>'
+
+    $(tabsHTML)
+      .find('li:first a')
+        .on('hide.bs.tab', function () {
+          ok(true, 'hide event fired')
+        })
+        .bootstrapTab('show')
+      .end()
+      .find('li:last a')
+        .bootstrapTab('show')
+
+    $(tabsHTML)
+      .find('li:first a')
+        .on('hidden.bs.tab', function () {
+          ok(true, 'hidden event fired')
+          done()
+        })
+        .bootstrapTab('show')
+      .end()
+      .find('li:last a')
+        .bootstrapTab('show')
+  })
+
+  test('should not fire hidden when hide is prevented', function (assert) {
+    var done = assert.async()
+
+    var tabsHTML = '<ul class="tabs">'
+        + '<li><a href="#home">Home</a></li>'
+        + '<li><a href="#profile">Profile</a></li>'
+        + '</ul>'
+
+    $(tabsHTML)
+      .find('li:first a')
+        .on('hide.bs.tab', function (e) {
+          e.preventDefault()
+          ok(true, 'hide event fired')
+          done()
+        })
+        .on('hidden.bs.tab', function () {
+          ok(false, 'hidden event fired')
+        })
+        .bootstrapTab('show')
+      .end()
+      .find('li:last a')
+        .bootstrapTab('show')
+  })
+
+  test('hide and hidden events contain correct relatedTarget', function (assert) {
+    var done = assert.async()
+
+    var tabsHTML = '<ul class="tabs">'
+        + '<li><a href="#home">Home</a></li>'
+        + '<li><a href="#profile">Profile</a></li>'
+        + '</ul>'
+
+    $(tabsHTML)
+      .find('li:first a')
+        .on('hide.bs.tab', function (e) {
+          equal(e.relatedTarget.hash, '#profile', 'references correct element as relatedTarget')
+        })
+        .on('hidden.bs.tab', function (e) {
+          equal(e.relatedTarget.hash, '#profile', 'references correct element as relatedTarget')
+          done()
+        })
+        .bootstrapTab('show')
+      .end()
+      .find('li:last a')
+        .bootstrapTab('show')
+  })
+
+  test('selected tab should have aria-expanded', function () {
+    var tabsHTML = '<ul class="nav nav-tabs">'
+        + '<li class="active"><a href="#home" toggle="tab" aria-expanded="true">Home</a></li>'
+        + '<li><a href="#profile" toggle="tab" aria-expanded="false">Profile</a></li>'
+        + '</ul>'
+    var $tabs = $(tabsHTML).appendTo('#qunit-fixture')
+
+    $tabs.find('li:first a').bootstrapTab('show')
+    equal($tabs.find('.active a').attr('aria-expanded'), 'true', 'shown tab has aria-expanded = true')
+    equal($tabs.find('li:not(.active) a').attr('aria-expanded'), 'false', 'hidden tab has aria-expanded = false')
+
+    $tabs.find('li:last a').click()
+    equal($tabs.find('.active a').attr('aria-expanded'), 'true', 'after click, shown tab has aria-expanded = true')
+    equal($tabs.find('li:not(.active) a').attr('aria-expanded'), 'false', 'after click, hidden tab has aria-expanded = false')
+
+    $tabs.find('li:first a').bootstrapTab('show')
+    equal($tabs.find('.active a').attr('aria-expanded'), 'true', 'shown tab has aria-expanded = true')
+    equal($tabs.find('li:not(.active) a').attr('aria-expanded'), 'false', 'hidden tab has aria-expanded = false')
+
+    $tabs.find('li:first a').click()
+    equal($tabs.find('.active a').attr('aria-expanded'), 'true', 'after second show event, shown tab still has aria-expanded = true')
+    equal($tabs.find('li:not(.active) a').attr('aria-expanded'), 'false', 'after second show event, hidden tab has aria-expanded = false')
   })
 
 })
